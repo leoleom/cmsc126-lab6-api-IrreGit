@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex Viewer</title>
+    <link rel="stylesheet" href="design.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <h1>Pokédex</h1>
+        <p>Search and explore Pokémon using the PokéAPI.</p>
+    </header>
+
+    <main>
+        <section class="controls">
+
+            <!-- Input for Pokémon name or ID -->
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Enter Pokémon name or ID"
+                aria-label="Search Pokémon by name or ID"
+            >
+
+            <!-- Dropdown for Pokémon type -->
+            <select id="typeSelect" aria-label="Filter Pokémon by type">
+                <option value="">Select Pokémon Type</option>
+                <option value="normal">Normal</option>
+                <option value="fire">Fire</option>
+                <option value="water">Water</option>
+                <option value="electric">Electric</option>
+                <option value="grass">Grass</option>
+                <option value="ice">Ice</option>
+                <option value="fighting">Fighting</option>
+                <option value="poison">Poison</option>
+                <option value="ground">Ground</option>
+                <option value="flying">Flying</option>
+                <option value="psychic">Psychic</option>
+                <option value="bug">Bug</option>
+                <option value="rock">Rock</option>
+                <option value="ghost">Ghost</option>
+                <option value="dragon">Dragon</option>
+                <option value="dark">Dark</option>
+                <option value="steel">Steel</option>
+                <option value="fairy">Fairy</option>
+            </select>
+
+            <!-- Action buttons -->
+            <button id="searchBtn" type="button">Search</button>
+            <button id="randomBtn" type="button">Random</button>
+            <button id="clearBtn" type="button">Clear</button>
+        </section>
+
+        <!-- Loading indicator (shown during API calls) -->
+        <section id="loading" class="hidden" aria-live="polite">
+            <p>Loading Pokémon data...</p>
+        </section>
+
+        <!-- Error message (shown when search fails) -->
+        <section id="error" class="hidden" aria-live="assertive">
+            <p>Pokémon not found. Please try another name, ID, or type.</p>
+        </section>
+
+        <!-- Pokémon Results -->
+        <section id="results">
+            <h2 id="resultsTitle">Pokémon Information</h2>
+            <!-- Dynamic Pokémon cards inserted here -->
+            <div id="pokemonContainer" class="card-container"></div>
+        </section>
+
+        <!-- Evolution Chain -->
+        <section id="evolutionSection">
+            <h2>Evolution Chain</h2>
+            <!-- Dynamic evolution data inserted here -->
+            <div id="evolutionContainer" class="evolution-container"></div>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <p>CMSC 126 – Web Programming | University of the Philippines Visayas</p>
+        <p>Data sourced from <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a></p>
+    </footer>
+
+    <script src="func.js"></script>
+</body>
+</html>
