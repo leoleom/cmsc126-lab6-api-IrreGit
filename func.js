@@ -2,29 +2,40 @@
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 const pokemonContainer = document.getElementById('pokemonContainer');
+const loadingSection = document.getElementById('loading');
+const errorSection = document.getElementById('error');
+const randomBtn = document.getElementById('randomBtn');
+const clearBtn = document.getElementById('clearBtn');
 
-// Main fetch function (Console Log version)
+// Main fetch function
 async function fetchPokemon(query) {
     if (!query) return; // Do nothing if input is empty
 
+    // 1. Show loading, hide error, and clear previous results
+    loadingSection.classList.remove('hidden');
+    errorSection.classList.add('hidden');
+    pokemonContainer.innerHTML = ''; 
+
     try {
-        // Format query (API requires lowercase and no extra spaces)
         const formattedQuery = query.toLowerCase().trim();
         const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${formattedQuery}`);
 
-        // If API returns a 404 (Not Found), throw an error
         if (!response.ok) {
             throw new Error('Pokémon not found');
         }
 
-        // Parse the JSON data
         const data = await response.json();
         
-        // Send the data to be rendered on the screen
+        // 2. Hide loading and show the new data
+        loadingSection.classList.add('hidden');
         renderPokemon(data);
 
     } catch (error) {
         console.error("API Error:", error);
+        
+        // 3. Hide loading and show the error message
+        loadingSection.classList.add('hidden');
+        errorSection.classList.remove('hidden');
     }
 }
 
@@ -70,3 +81,24 @@ function renderPokemon(pokemon) {
     // Inject the HTML into the container
     pokemonContainer.innerHTML = cardHTML;
 }
+
+// Random Button Logic
+randomBtn.addEventListener('click', () => {
+    // Generate a random number between 1 and 1025 (total Pokémon in the National Dex)
+    const randomId = Math.floor(Math.random() * 1025) + 1;
+    
+    // Update the input field so the user sees the ID, then fetch it
+    searchInput.value = randomId; 
+    fetchPokemon(randomId.toString()); 
+});
+
+// Clear Button Logic
+clearBtn.addEventListener('click', () => {
+    // Empty the input field and the display container
+    searchInput.value = '';
+    pokemonContainer.innerHTML = '';
+    
+    // Ensure error and loading messages are hidden
+    errorSection.classList.add('hidden');
+    loadingSection.classList.add('hidden');
+});
