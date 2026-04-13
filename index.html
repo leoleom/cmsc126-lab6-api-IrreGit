@@ -16,6 +16,7 @@
 
     <main>
         <section class="controls">
+            <form id="searchForm" role="search">
 
             <form role="search" id="searchForm">
                 
@@ -55,8 +56,11 @@
             </form>
 
             <!-- Action buttons -->
-            <button id="searchBtn" type="button">Search</button>
-            <button id="randomBtn" type="button">Random</button>
+            <div class="button-group">
+                <button id="searchBtn" type="button">Search</button>
+                <button id="randomBtn" type="button">Random</button>
+                <button id="showAllBtn" type="button">Show All</button>
+            </div>
         </section>
 
         <!-- Loading indicator (shown during API calls) -->
@@ -72,21 +76,38 @@
         <!-- Pokémon Results -->
         <section id="results">
             <h2 id="resultsTitle">Pokémon Information</h2>
+
             <!-- Dynamic Pokémon cards inserted here -->
-            <div id="pokemonContainer" class="card-container"></div>
+            <div id="pokemonContainer" class="card-container">
+                <p id="noInfoMessage" class="placeholder-message">
+                    No information yet. Try searching for a Pokémon or click "Show All".
+                </p>
+            </div>
+
+            <!-- Pagination for Show All / Type Filter -->
+            <div id="paginationSection" class="hidden">
+                <button id="prevBtn" type="button">Previous</button>
+                <button id="nextBtn" type="button">Next</button>
+            </div>
         </section>
 
         <!-- Evolution Chain -->
         <section id="evolutionSection">
-            <h2>Evolution Chain</h2>
+            <div class="evolution-header">
+                <h2>Evolution Chain</h2>
+                <button id="showGen1Btn" type="button" class="secondary-btn">Show Gen 1</button>
+            </div>
+
             <!-- Dynamic evolution data inserted here -->
-            <div id="evolutionContainer" class="evolution-container"></div>
+            <div id="evolutionContainer" class="evolution-container">
+                <p id="noEvolutionMessage" class="placeholder-message">No evolution data yet.</p>
+            </div>
         </section>
     </main>
 
     <!-- Footer Section -->
     <footer class="footer">
-        <p>CMSC 126 – Web Programming | University of the Philippines Visayas</p>
+        <p>IrreGit | CMSC 126 – Web Programming | University of the Philippines Visayas</p>
         <p>Data sourced from <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a></p>
     </footer>
 
