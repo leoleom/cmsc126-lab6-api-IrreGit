@@ -194,3 +194,38 @@ typeSelect.addEventListener('change', async (event) => {
         errorSection.classList.remove('hidden');
     }
 });
+
+// Show Gen 1 Button Logic
+const gen1Btn = document.getElementById('gen1Btn');
+
+// Safety check ensures the code only runs if the button actually exists in HTML
+if (gen1Btn) {
+    gen1Btn.addEventListener('click', async () => {
+        // Reset the UI
+        loadingSection.classList.remove('hidden');
+        errorSection.classList.add('hidden');
+        pokemonContainer.innerHTML = '';
+        if (evolutionContainer) evolutionContainer.innerHTML = '';
+        searchInput.value = '';
+
+        try {
+            // Fetch the list of the first 151 Pokémon
+            const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
+            const data = await response.json();
+            
+            // Loop through and fetch details for each one
+            for (let i = 0; i < data.results.length; i++) {
+                const pokeName = data.results[i].name;
+                const pokeResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeName}`);
+                const pokeData = await pokeResponse.json();
+                renderPokemon(pokeData);
+            }
+            
+            loadingSection.classList.add('hidden');
+        } catch (error) {
+            console.error("API Error:", error);
+            loadingSection.classList.add('hidden');
+            errorSection.classList.remove('hidden');
+        }
+    });
+}
