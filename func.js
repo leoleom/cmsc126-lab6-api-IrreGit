@@ -1,6 +1,7 @@
 const typeSelect = document.getElementById('typeSelect');
 const typeIcon = document.getElementById('typeIcon');
-
+const searchForm = document.getElementById('searchForm')
+const clearBtn = document.getElementById('clearBtn');
 
 const typeColor = {
     "normal": "#9FA19F",
@@ -23,7 +24,8 @@ const typeColor = {
     "fairy": "#EF70EF"
 }
 
-typeSelect.addEventListener('change', () => {
+typeSelect.addEventListener('change', updateType)
+function updateType(){
     const selectedType = typeSelect.value;
 
     if (selectedType) {
@@ -33,5 +35,22 @@ typeSelect.addEventListener('change', () => {
         typeIcon.src = 'assets/None.png'; 
         typeWrapper.style.backgroundColor = "#68A090";
     }
-});
+};
 
+function isFormDirty() {
+    const formData = new FormData(searchForm)
+    return !Array.from(formData.values()).some(value => value.toString().trim() !== "");
+}
+
+searchForm.addEventListener('input', () => {
+    const formData = new FormData(searchForm)
+    const isDirty = !Array.from(formData.values()).some(value => value.toString().trim() !== "");
+    clearBtn.style.display = isDirty ? "block" : "none";
+})
+
+clearBtn.addEventListener('click', () => {
+    searchInput.value = "";
+    typeSelect.value = ""
+    updateType()
+    clearBtn.style.display = "none";
+})
