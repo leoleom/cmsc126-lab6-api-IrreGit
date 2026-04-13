@@ -19,9 +19,11 @@
 
             <form role="search" class="searchInput">
                 
+                <div id="typeWrapper">
+                <img id="typeIcon" src="assets/None.png">
                 <!-- Dropdown for Pokémon type -->
                 <select id="typeSelect" aria-label="Filter Pokémon by type">
-                    <option value="">Select Pokémon Type</option>
+                    <option value="">Any</option>
                     <option value="normal">Normal</option>
                     <option value="fire">Fire</option>
                     <option value="water">Water</option>
@@ -41,7 +43,7 @@
                     <option value="steel">Steel</option>
                     <option value="fairy">Fairy</option>
                 </select>
-
+            </div>
                 <!-- Input for Pokémon name or ID -->
                 <input  type="text" 
                         id="searchInput"
