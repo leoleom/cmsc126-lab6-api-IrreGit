@@ -6,6 +6,7 @@ const loadingSection = document.getElementById('loading');
 const errorSection = document.getElementById('error');
 const randomBtn = document.getElementById('randomBtn');
 const clearBtn = document.getElementById('clearBtn');
+const typeSelect = document.getElementById('typeSelect');
 
 // Main fetch function
 async function fetchPokemon(query) {
@@ -79,7 +80,7 @@ function renderPokemon(pokemon) {
     `;
 
     // Inject the HTML into the container
-    pokemonContainer.innerHTML = cardHTML;
+    pokemonContainer.innerHTML += cardHTML;
 }
 
 // Random Button Logic
@@ -101,4 +102,48 @@ clearBtn.addEventListener('click', () => {
     // Ensure error and loading messages are hidden
     errorSection.classList.add('hidden');
     loadingSection.classList.add('hidden');
+});
+
+// Dropdown Filter Logic
+typeSelect.addEventListener('change', async (event) => {
+    const selectedType = event.target.value;
+    
+    // If they change it back to the default "Select Pokémon Type" option, do nothing
+    if (!selectedType) return; 
+
+    // Reset UI for a fresh search
+    loadingSection.classList.remove('hidden');
+    errorSection.classList.add('hidden');
+    pokemonContainer.innerHTML = ''; 
+    searchInput.value = ''; // Clear the text input to avoid confusion
+
+    try {
+        // Fetch the list of Pokémon that have this type
+        const response = await fetch(`https://pokeapi.co/api/v2/type/${selectedType}`);
+        if (!response.ok) throw new Error('Type not found');
+        
+        const data = await response.json();
+        
+        // Some types have hundreds of Pokémon. Let's just grab the first 6 so the browser doesn't freeze!
+        const pokemonList = data.pokemon.slice(0, 6);
+        
+        // Loop through the list and fetch the details for each one
+        for (let i = 0; i < pokemonList.length; i++) {
+            const pokeName = pokemonList[i].pokemon.name;
+            
+            // Fetch the specific data for this Pokémon
+            const pokeResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeName}`);
+            const pokeData = await pokeResponse.json();
+            
+            // Reuse our render function (it will now add 6 cards side-by-side)
+            renderPokemon(pokeData);
+        }
+        
+        loadingSection.classList.add('hidden');
+        
+    } catch (error) {
+        console.error("API Error:", error);
+        loadingSection.classList.add('hidden');
+        errorSection.classList.remove('hidden');
+    }
 });
