@@ -90,15 +90,15 @@ function renderPokemon(pokemon) {
 
 async function fetchEvolutionChain(speciesUrl) {
     try {
-        // First, fetch the Species data
+        // Fetch the Species data
         const speciesResponse = await fetch(speciesUrl);
         const speciesData = await speciesResponse.json();
 
-        // Next, fetch the Evolution Chain data
+        // Fetch the Evolution Chain data
         const evolutionResponse = await fetch(speciesData.evolution_chain.url);
         const evolutionData = await evolutionResponse.json();
 
-        // After that, dig through the nested 'chain' object
+        // Dig through the nested 'chain' object
         let currentEvolution = evolutionData.chain;
         let evolutionPathHTML = '';
 
@@ -106,12 +106,22 @@ async function fetchEvolutionChain(speciesUrl) {
         while (currentEvolution) {
             const speciesName = currentEvolution.species.name;
             
-            // Build simple span for each evolution stage
-            evolutionPathHTML += `<span class="evo-stage">${speciesName.toUpperCase()}</span>`;
+            // Fetch the image for this specific evolution stage
+            const pokeResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${speciesName}`);
+            const pokeData = await pokeResponse.json();
+            const spriteUrl = pokeData.sprites.front_default;
+            
+            // Build the HTML including an <img> tag
+            evolutionPathHTML += `
+                <div class="evo-stage">
+                    <img src="${spriteUrl}" alt="${speciesName}">
+                    <p>${speciesName.toUpperCase()}</p>
+                </div>
+            `;
 
-            // If another evolution, add an arrow and move down the chain
+            // If there is another evolution, add an arrow and move down the chain
             if (currentEvolution.evolves_to.length > 0) {
-                evolutionPathHTML += ` <span class="evo-arrow">➔</span> `;
+                evolutionPathHTML += ` <div class="evo-arrow">➔</div> `;
                 currentEvolution = currentEvolution.evolves_to[0]; 
             } else {
                 // No more evolutions, break the loop
@@ -120,7 +130,7 @@ async function fetchEvolutionChain(speciesUrl) {
         }
 
         // Display the HTML in the container
-        evolutionContainer.innerHTML = `<p>${evolutionPathHTML}</p>`;
+        evolutionContainer.innerHTML = `<div class="evo-wrapper">${evolutionPathHTML}</div>`;
 
     } catch (error) {
         console.error("Evolution Error:", error);
