@@ -7,6 +7,7 @@ const errorSection = document.getElementById('error');
 const randomBtn = document.getElementById('randomBtn');
 const clearBtn = document.getElementById('clearBtn');
 const typeSelect = document.getElementById('typeSelect');
+const evolutionContainer = document.getElementById('evolutionContainer');
 
 // Main fetch function
 async function fetchPokemon(query) {
@@ -16,6 +17,7 @@ async function fetchPokemon(query) {
     loadingSection.classList.remove('hidden');
     errorSection.classList.add('hidden');
     pokemonContainer.innerHTML = ''; 
+    evolutionContainer.innerHTML = '';
 
     try {
         const formattedQuery = query.toLowerCase().trim();
@@ -27,14 +29,17 @@ async function fetchPokemon(query) {
 
         const data = await response.json();
         
-        // 2. Hide loading and show the new data
+        // Hide loading and show the new data
         loadingSection.classList.add('hidden');
         renderPokemon(data);
+
+        // Fetch and display the evolution chain
+        fetchEvolutionChain(data.species.url);
 
     } catch (error) {
         console.error("API Error:", error);
         
-        // 3. Hide loading and show the error message
+        // Hide loading and show the error message
         loadingSection.classList.add('hidden');
         errorSection.classList.remove('hidden');
     }
@@ -83,6 +88,46 @@ function renderPokemon(pokemon) {
     pokemonContainer.innerHTML += cardHTML;
 }
 
+async function fetchEvolutionChain(speciesUrl) {
+    try {
+        // First, fetch the Species data
+        const speciesResponse = await fetch(speciesUrl);
+        const speciesData = await speciesResponse.json();
+
+        // Next, fetch the Evolution Chain data
+        const evolutionResponse = await fetch(speciesData.evolution_chain.url);
+        const evolutionData = await evolutionResponse.json();
+
+        // After that, dig through the nested 'chain' object
+        let currentEvolution = evolutionData.chain;
+        let evolutionPathHTML = '';
+
+        // Standard while loop to trace the 'evolves_to' array
+        while (currentEvolution) {
+            const speciesName = currentEvolution.species.name;
+            
+            // Build simple span for each evolution stage
+            evolutionPathHTML += `<span class="evo-stage">${speciesName.toUpperCase()}</span>`;
+
+            // If another evolution, add an arrow and move down the chain
+            if (currentEvolution.evolves_to.length > 0) {
+                evolutionPathHTML += ` <span class="evo-arrow">➔</span> `;
+                currentEvolution = currentEvolution.evolves_to[0]; 
+            } else {
+                // No more evolutions, break the loop
+                currentEvolution = null; 
+            }
+        }
+
+        // Display the HTML in the container
+        evolutionContainer.innerHTML = `<p>${evolutionPathHTML}</p>`;
+
+    } catch (error) {
+        console.error("Evolution Error:", error);
+        evolutionContainer.innerHTML = '<p>Evolution data unavailable.</p>';
+    }
+}
+
 // Random Button Logic
 randomBtn.addEventListener('click', () => {
     // Generate a random number between 1 and 1025 (total Pokémon in the National Dex)
@@ -98,6 +143,7 @@ clearBtn.addEventListener('click', () => {
     // Empty the input field and the display container
     searchInput.value = '';
     pokemonContainer.innerHTML = '';
+    evolutionContainer.innerHTML = '';
     
     // Ensure error and loading messages are hidden
     errorSection.classList.add('hidden');
@@ -115,6 +161,7 @@ typeSelect.addEventListener('change', async (event) => {
     loadingSection.classList.remove('hidden');
     errorSection.classList.add('hidden');
     pokemonContainer.innerHTML = ''; 
+    evolutionContainer.innerHTML = '';
     searchInput.value = ''; // Clear the text input to avoid confusion
 
     try {
