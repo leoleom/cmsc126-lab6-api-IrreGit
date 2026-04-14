@@ -177,7 +177,7 @@ function renderPokemon(pokemon) {
 
     // Build the HTML structure for the card
     const cardHTML = `
-        <div class="pokemon-card">
+        <div class="pokemon-card" onclick="openPokemonPage('${pokemon.name}')">
             <img src="${sprite}" alt="${name} sprite" class="card-sprite">
             <h3 class="pokemon-name">#${id} - ${name.toUpperCase()}</h3>
             <p class="card-type"><strong>Type:</strong> ${typesHTML}</p>
@@ -355,6 +355,42 @@ function handleFormInput() {
 function updateClearButton() {
     const isDirty = searchInput.value.trim() !== '' || typeSelect.value !== '';
     clearBtn.style.display = isDirty ? "block" : "none";
+}
+
+/* ===== OPEN INDIV POKEMON ===== */
+
+async function openPokemonPage(name) {
+    pageUI.style.display = "none";
+    nextBtn.style.display = "none";
+    clearBtn.style.display = "block";
+
+    try {
+        loadingSection.classList.remove('hidden');
+
+        // clear main container (THIS IS THE KEY CHANGE)
+        pokemonContainer.innerHTML = '';
+        evolutionContainer.innerHTML = '';
+
+        results.style.display = "inline-block";
+        evolution.style.display = "inline-block";
+
+        // fetch pokemon
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+        const data = await res.json();
+
+        if (!res.ok) throw new Error();
+
+        loadingSection.classList.add('hidden');
+
+        // render ONLY ONE pokemon in main container
+        renderPokemon(data);
+
+        // fetch evolution chain under it
+        await fetchEvolutionChain(data.species.url);
+
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 fetchPokemon('', '');
