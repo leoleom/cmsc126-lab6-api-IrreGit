@@ -65,7 +65,7 @@ function renderPokemon(pokemon) {
     // Extract abilities
     const abilitiesList = [];
     const hiddenList = [];
-    
+
     for (let i = 0; i < pokemon.abilities.length; i++) {
         if(!pokemon.abilities[i].is_hidden)
             abilitiesList.push(pokemon.abilities[i].ability.name);
@@ -92,16 +92,17 @@ function renderPokemon(pokemon) {
         <div class="pokemon-card">
             <img src="${sprite}" alt="${name} sprite">
             <h3>#${id} - ${name.toUpperCase()}</h3>
-            <p><strong>Type:</strong> ${types}</p>
-            <p><strong>Abilities:</strong> ${abilities}</p>
-            <p><strong>Hidden:</strong> ${hiddenList}</p>
-            <p><strong>Height:</strong> ${height} m</p>
-            <p><strong>Weight:</strong> ${weight} kg</p>
+            <p class="card-type"><strong>Type:</strong> ${types}</p>
+            <p class="card-abilities"><strong>Abilities:</strong> ${abilities}</p>
+            <p class="card-hidden"><strong>Hidden:</strong> ${hiddenList}</p>
+            <p class="card-height"><strong>Height:</strong> ${height} m</p>
+            <p class="card-weight"><strong>Weight:</strong> ${weight} kg</p>
         </div>
     `;
 
     // Inject the HTML into the container
     pokemonContainer.innerHTML += cardHTML;
+    pokemonContainer.insertAdjacentHTML('beforeend', cardHTML);
 }
 
 async function fetchEvolutionChain(speciesUrl) {
