@@ -58,11 +58,16 @@ function updateType(){
 };
 
 async function filterType(selectedType) {
-    // get all pokemon of said type
-    const typeRes = await fetch(`https://pokeapi.co/api/v2/type/${selectedType}`);
-    const typeData = await typeRes.json();
-    let typeMatch = typeData.pokemon.map(p => p.pokemon);
-    return typeMatch
+    if (selectedType){
+        const typeRes = await fetch(`https://pokeapi.co/api/v2/type/${selectedType}`);
+        const typeData = await typeRes.json();
+        return typeMatch = typeData.pokemon.map(p => p.pokemon);
+    } else {
+        const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=100000');
+        const data = await res.json();
+        return data.results;
+
+    }
 }
 
 /* ===== FETCHING ===== */
@@ -98,18 +103,7 @@ async function fetchPokemon(query, selectedType) {
         }
 
         // else, filter by type (if any)
-        let pokemonList = [];
-        if (selectedType){
-            pokemonList = await filterType(selectedType)
-        }
-
-        // filter by name (if any) from type
-        if (pokemonList.length === 0){
-            const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=100000');
-            const data = await res.json();
-            pokemonList = data.results;
-        }
-
+        let pokemonList = await filterType(selectedType);
         currentMatches = pokemonList
         .filter(p => p.name.includes(searchTerm))
 
@@ -293,13 +287,15 @@ function handleTypeChange(event) {
 }
 
 // Random Button Logic
-function handleRandom() {
-   // Generate a random number between 1 and 1025 (total Pokémon in the National Dex)
-    const randomId = Math.floor(Math.random() * 1025) + 1;
+async function handleRandom() {
+    const filtered = await filterType(typeSelect.value)
+    const random = filtered[Math.floor(Math.random() * filtered.length)];
+    const res = await fetch(random.url)
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    searchInput.value = data.id; 
     
-    // Update the input field so the user sees the ID, then fetch it
-    searchInput.value = randomId; 
-    fetchPokemon(randomId.toString(), ''); 
+    fetchPokemon(data.id.toString(), typeSelect.value); 
 }
 
 // combined the two functions to one
