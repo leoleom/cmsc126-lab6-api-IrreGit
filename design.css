@@ -51,17 +51,13 @@ display: none;
     margin-top: auto;
     box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
 
-    p {
-        margin: 0px;
-    }
+    p {margin: 0px;}
 
     a {
         color: #feca1b;
         text-decoration: none;
 
-        &:hover {
-            text-decoration: underline;
-        }
+        &:hover {text-decoration: underline;}
     }
 }
 
@@ -246,9 +242,7 @@ form {
         text-transform: capitalize;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
 
-        img {
-            vertical-align: middle;
-        }
+        img {vertical-align: middle;}
     }
 
     .card-sprite{
@@ -260,14 +254,10 @@ form {
     }
 }
 
-.evolution-header {
-    display: block;
-}
+.evolution-header {display: block;}
 
 #pokemonContainer,
-#evolutionContainer {
-    padding: 20px;
-}
+#evolutionContainer {padding: 20px;}
 
 .pokemon-card{
     width: 230px;
@@ -280,10 +270,18 @@ form {
     transition: box-shadow 0.25s ease;
     vertical-align: top;
     line-height: 1.5;
+    cursor: pointer;
 
-    &:hover {
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    }
+    &:hover {box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);}
+    &:active {animation: cardPop 0.35s ease-out;}
+}
+
+@keyframes cardPop {
+    0% {transform: scale(1);}
+    25% {transform: scale(0.95);}
+    50% {transform: scale(1.05);}
+    75% {transform: scale(0.98);}
+    100% {transform: scale(1);}
 }
 
 .placeholder-message {
