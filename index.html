@@ -17,9 +17,6 @@
     <main>
         <section class="controls">
             <form id="searchForm" role="search">
-
-            <form role="search" id="searchForm">
-                
                 <div id="typeWrapper">
                 <img id="typeIcon" src="assets/None.png">
                 <!-- Dropdown for Pokémon type -->
@@ -87,6 +84,7 @@
             <!-- Pagination for Show All / Type Filter -->
             <div id="paginationSection" class="hidden">
                 <button id="prevBtn" type="button">Previous</button>
+                <input type="number" id="pageNumber" value="1" min="1">
                 <button id="nextBtn" type="button">Next</button>
             </div>
         </section>
