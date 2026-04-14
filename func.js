@@ -91,7 +91,7 @@ function renderPokemon(pokemon) {
     const cardHTML = `
         <div class="pokemon-card">
             <img src="${sprite}" alt="${name} sprite">
-            <h3>#${id} - ${name.toUpperCase()}</h3>
+            <h3 class="pokemon-name">#${id} - ${name.toUpperCase()}</h3>
             <p class="card-type"><strong>Type:</strong> ${types}</p>
             <p class="card-abilities"><strong>Abilities:</strong> ${abilities}</p>
             <p class="card-hidden"><strong>Hidden:</strong> ${hiddenList}</p>
