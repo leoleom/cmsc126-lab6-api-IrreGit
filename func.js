@@ -61,6 +61,20 @@ function renderPokemon(pokemon) {
     const name = pokemon.name;
     const id = pokemon.id;
     const sprite = pokemon.sprites.front_default; 
+
+    // Extract abilities
+    const abilitiesList = [];
+    const hiddenList = [];
+    
+    for (let i = 0; i < pokemon.abilities.length; i++) {
+        if(!pokemon.abilities[i].is_hidden)
+            abilitiesList.push(pokemon.abilities[i].ability.name);
+        else
+            hiddenList.push(pokemon.abilities[i].ability.name);
+    }
+
+
+    const abilities = abilitiesList.join(', ');
     
     // Extract types
     const typesList = [];
@@ -79,6 +93,8 @@ function renderPokemon(pokemon) {
             <img src="${sprite}" alt="${name} sprite">
             <h3>#${id} - ${name.toUpperCase()}</h3>
             <p><strong>Type:</strong> ${types}</p>
+            <p><strong>Abilities:</strong> ${abilities}</p>
+            <p><strong>Hidden:</strong> ${hiddenList}</p>
             <p><strong>Height:</strong> ${height} m</p>
             <p><strong>Weight:</strong> ${weight} kg</p>
         </div>
