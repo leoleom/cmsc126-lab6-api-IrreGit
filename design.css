@@ -1,0 +1,154 @@
+@import url('https://googleapis.com');
+@import url('https://fonts.cdnfonts.com/css/pokemon-solid');
+
+body {
+    display: flex;
+    flex-direction: column;
+    margin: 0px;
+    height: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    
+    color: #f5f5f5;
+    background-color: #ef5350;
+    
+    text-align: center;
+    font-family: 'Helvetica', sans-serif;
+    font-size: 12px;
+
+    main {flex: 1;}
+}
+
+header {
+    h1 {
+        font-size: 80px;
+        font-family: 'Pokemon Solid', sans-serif;
+        margin: -40px;
+        letter-spacing: 5px;
+        -webkit-text-fill-color: #feca1b;
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: #3761a8;
+    }
+    
+    p {
+        font-size: 18px;
+        margin-top: 0px;
+    }
+}
+
+.hidden {
+display: none;
+}
+
+.footer {
+    background-color: #2f2f2f;
+    padding: 20px;
+
+    p {
+        margin: 0px;
+    }
+}
+
+main > section {
+    margin-bottom: 20px;
+
+    button {
+        border-radius: 20px;
+        vertical-align: middle;
+    }
+}
+
+form {
+    background-color: #f5f5f5;
+    display: inline-flex;
+    width: 350px;
+    padding: 5px;
+    border-radius: 20px;
+    align-items: center;
+
+    input:focus, select:focus{ 
+        outline: none;
+    }
+    
+    input{
+        flex-grow: 1;
+        min-width: 0;
+        width: 250px;
+        padding-left: 10px;
+    }
+
+    #searchInput, #typeSelect, .clearBtn{
+        border: none;
+        background-color: transparent;
+    }
+    
+    .clearBtn{
+        margin-left: auto;
+        display: none;
+        text-align: right;
+    }
+}
+
+#typeWrapper{
+    position: relative;
+    border-radius: 20px;
+    background-color: #3761a8;
+    min-width: 50px;
+    width: 50px;
+    height: 25px;
+
+    #typeSelect{
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        width: 95%;
+        height: 100%;
+        cursor: pointer;
+        text-indent: 100px;
+        overflow: hidden;
+        white-space: nowrap;
+        color: white;
+        z-index: 2;
+
+        option{
+            background-color: white;
+            color: black;
+        }
+    }
+
+    #typeIcon {
+        object-fit: contain;
+        vertical-align: middle;
+        max-width: 25px;
+        height: 25px;
+        z-index: 1;
+        padding-right: 10px;
+    }
+
+}
+
+#results, #evolutionSection {
+    background-color: white;
+    
+    border-radius: 12px;
+    display: inline-block;
+    width: fit-content;
+    min-width: 50%;
+
+    h2 {
+        background-color: #595959;
+        margin: 0px;
+        padding: 10px 20px;
+        border-radius: 10px 10px 0px 0px;
+        
+        color: white;
+        font-weight: 500;
+        text-align: left;
+    }
+
+    div{
+        /* for testing */
+        height: 100px;
+    }
+}
