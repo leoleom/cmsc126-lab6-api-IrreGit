@@ -45,7 +45,6 @@ const typePokemon = {
     "fairy": {"color": "#EF70EF", "image": "assets/30px-Fairy_icon.png"}
 }
 
-typeSelect.addEventListener('change', updateType)
 function updateType(){
     const selectedType = typeSelect.value;
 
@@ -58,37 +57,6 @@ function updateType(){
     }
 };
 
-function isFormDirty() {
-    const formData = new FormData(searchForm)
-    return !Array.from(formData.values()).some(value => value.toString().trim() !== "");
-}
-
-searchForm.addEventListener('input', () => {
-    const formData = new FormData(searchForm)
-    const isDirty = Array.from(formData.values()).some(value => value.toString().trim() !== "");
-    clearBtn.style.display = isDirty ? "none" : "block";
-})
-
-// combined the two functions to one
-clearBtn.addEventListener('click', () => {
-    clearBtn.style.display = "none";
-    results.style.display = "none";
-    evolution.style.display = "none";
-
-    pokemonContainer.innerHTML = '';
-    evolutionContainer.innerHTML = '';
-    searchInput.value = "";
-    typeSelect.value = ""
-    updateType()
-    
-    errorSection.classList.add('hidden');
-    loadingSection.classList.add('hidden');
-});
-
-let currentMatches = [];
-let currentPage = 1;
-const itemsPerPage = 12;
-
 async function filterType(selectedType) {
     // get all pokemon of said type
     const typeRes = await fetch(`https://pokeapi.co/api/v2/type/${selectedType}`);
@@ -97,8 +65,9 @@ async function filterType(selectedType) {
     return typeMatch
 }
 
-// rewwrote fetch function to act as a filter search and match the compatible searches
+/* ===== FETCHING ===== */
 async function fetchPokemon(query, selectedType) {
+    updateClearButton();
     // 1. Show loading, hide error, and clear previous results
     loadingSection.classList.remove('hidden');
     errorSection.classList.add('hidden');
@@ -177,63 +146,6 @@ async function fetchPokemon(query, selectedType) {
         evolution.style.display = "none";
     }
 }
-
-// results page - show up to n pokemon
-async function renderCurrentPage() {
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const items = currentMatches.slice(start, end);
-
-    const detailedData = await Promise.all(
-        items.map(p => fetch(p.url).then(res => res.json()))
-    );
-
-    loadingSection.classList.add('hidden');
-    pokemonContainer.innerHTML = '';
-    detailedData.forEach(poke => renderPokemon(poke));
-
-    pageNumber.value = currentPage;
-    prevBtn.style.display = (currentPage > 1)? "inline-block": "none";
-    nextBtn.style.display = (currentPage === Math.ceil(currentMatches.length / itemsPerPage)) ? "none": "inline-block";
-}
-
-// navigating the results
-nextBtn.addEventListener('click', () => {    
-    currentPage++;
-    renderCurrentPage()
-})
-
-prevBtn.addEventListener('click', () => {    
-    currentPage--;
-    renderCurrentPage()
-})
-
-pageNumber.oninput = function () {
-    const max = parseInt(this.max);
-    const min = parseInt(this.min);
-    const value = parseInt(this.value);
-    
-    if (value > max) {
-        this.value = max; 
-    } else if (value < min) {
-        this.value = min; 
-    } else {
-        currentPage = value;
-        renderCurrentPage()
-    }
-};
-
-// changed to 'submit'
-searchForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const query = searchInput.value;
-    const selectedType = typeSelect.value;
-    fetchPokemon(query, selectedType)
-})
-
-searchBtn.addEventListener('click', () => {
-    searchForm.requestSubmit();
-});
 
 function renderPokemon(pokemon) {
     // Extract the specific data points needed from JSON
@@ -335,48 +247,119 @@ async function fetchEvolutionChain(speciesUrl) {
     }
 }
 
+
+/* ===== Rendering page ===== */
+let currentMatches = [];
+let currentPage = 1;
+const itemsPerPage = 12;
+
+async function renderCurrentPage() {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const items = currentMatches.slice(start, end);
+
+    const detailedData = await Promise.all(
+        items.map(p => fetch(p.url).then(res => res.json()))
+    );
+
+    loadingSection.classList.add('hidden');
+    pokemonContainer.innerHTML = '';
+    detailedData.forEach(poke => renderPokemon(poke));
+
+    pageNumber.value = currentPage;
+    prevBtn.style.display = (currentPage > 1)? "inline-block": "none";
+    nextBtn.style.display = (currentPage === Math.ceil(currentMatches.length / itemsPerPage)) ? "none": "inline-block";
+}
+
+
+/* ===== ACTION LISTENER FUNCTIONS ===== */
+
+function handleSearch(event) {
+    if (event) 
+        event.preventDefault();
+
+    fetchPokemon(searchInput.value, typeSelect.value);
+}
+
+function handleTypeChange(event) {
+    updateType();
+    const selectedType = event.target.value;
+    if (!selectedType) {
+        results.style.display = "none";
+        pokemonContainer.innerHTML = '';
+        return;
+    }
+    fetchPokemon('', selectedType);
+}
+
 // Random Button Logic
-randomBtn.addEventListener('click', () => {
-    // Generate a random number between 1 and 1025 (total Pokémon in the National Dex)
+function handleRandom() {
+   // Generate a random number between 1 and 1025 (total Pokémon in the National Dex)
     const randomId = Math.floor(Math.random() * 1025) + 1;
     
     // Update the input field so the user sees the ID, then fetch it
     searchInput.value = randomId; 
-    fetchPokemon(randomId.toString()); 
-});
-
-// Show Gen 1 Button Logic
-const gen1Btn = document.getElementById('gen1Btn');
-
-// Safety check ensures the code only runs if the button actually exists in HTML
-if (gen1Btn) {
-    gen1Btn.addEventListener('click', async () => {
-        // Reset the UI
-        loadingSection.classList.remove('hidden');
-        errorSection.classList.add('hidden');
-        pokemonContainer.innerHTML = '';
-        if (evolutionContainer) evolutionContainer.innerHTML = '';
-        searchInput.value = '';
-
-        try {
-            // Fetch the list of the first 151 Pokémon
-            const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
-            const data = await response.json();
-            
-            // Loop through and fetch details for each one
-            for (let i = 0; i < data.results.length; i++) {
-                const pokeName = data.results[i].name;
-                const pokeResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeName}`);
-                const pokeData = await pokeResponse.json();
-                renderPokemon(pokeData);
-            }
-            
-            loadingSection.classList.add('hidden');
-        } catch (error) {
-            console.error("API Error:", error);
-            loadingSection.classList.add('hidden');
-            errorSection.classList.remove('hidden');
-        }
-    });
+    fetchPokemon(randomId.toString(), ''); 
 }
 
+// combined the two functions to one
+function handleClear() {
+    evolution.style.display = "none";
+    pageUI.style.display = "none";
+
+    searchInput.value = '';
+    typeSelect.value = '';
+    updateType();
+
+    errorSection.classList.add('hidden');
+    loadingSection.classList.add('hidden');
+
+    evolutionContainer.innerHTML = '';
+    currentPage = 1;
+
+    fetchPokemon('', '');
+    updateClearButton();
+}
+
+// navigating the results
+function handlePrev() {
+    if (currentPage > 1) {
+        currentPage--;
+        renderCurrentPage();
+    }
+}
+
+function handleNext() {
+    currentPage++;
+    renderCurrentPage();
+}
+
+function handlePageInput(input) {
+    const max = parseInt(input.max);
+    const min = parseInt(input.min);
+    const value = parseInt(input.value);
+
+    if (value > max) {
+        input.value = max;
+    } else if (value < min) {
+        input.value = min;
+    } else {
+        currentPage = value;
+        renderCurrentPage();
+    }
+}
+
+function handleFormInput() {
+    const isDirty = searchInput.value.trim() !== '' || typeSelect.value !== '';
+    updateClearButton();
+}
+
+
+// helper for clearing
+function updateClearButton() {
+    const isDirty = searchInput.value.trim() !== '' || typeSelect.value !== '';
+    clearBtn.style.display = isDirty ? "block" : "none";
+}
+
+fetchPokemon('', '');
+updateClearButton();

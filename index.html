@@ -16,11 +16,11 @@
 
     <main>
         <section class="controls">
-            <form id="searchForm" role="search">
+            <form id="searchForm" role="search" onsubmit="handleSearch(event)" oninput="handleFormInput()">
                 <div id="typeWrapper">
                 <img id="typeIcon" src="assets/None.png">
                 <!-- Dropdown for Pokémon type -->
-                <select id="typeSelect" aria-label="Filter Pokémon by type">
+                <select id="typeSelect" aria-label="Filter Pokémon by type" onchange="handleTypeChange(event)">
                     <option value="">Any</option>
                     <option value="normal">Normal</option>
                     <option value="fire">Fire</option>
@@ -49,14 +49,13 @@
                         aria-label="Search Pokémon by name or ID"
                 >
 
-                <button id="clearBtn" type="button">Clear</button>
+                <button id="clearBtn" type="button" onclick="handleClear()">Clear</button>
             </form>
 
             <!-- Action buttons -->
             <div class="button-group">
-                <button id="searchBtn" type="button">Search</button>
-                <button id="randomBtn" type="button">Random</button>
-                <button id="showAllBtn" type="button">Show All</button>
+                <button id="searchBtn" type="button" onclick="handleSearch()">Search</button>
+                <button id="randomBtn" type="button" onclick="handleRandom()">Random</button>
             </div>
         </section>
 
@@ -83,9 +82,9 @@
 
             <!-- Pagination for Show All / Type Filter -->
             <div id="paginationSection" class="hidden">
-                <button id="prevBtn" type="button">Previous</button>
-                <input type="number" id="pageNumber" value="1" min="1">
-                <button id="nextBtn" type="button">Next</button>
+                <button id="prevBtn" type="button" onclick="handlePrev()">Previous</button>
+                <input type="number" id="pageNumber" oninput="handlePageInput(this)" value="1" min="1">
+                <button id="nextBtn" type="button" onclick="handleNext()">Next</button>
             </div>
         </section>
 
@@ -93,7 +92,6 @@
         <section id="evolutionSection">
             <div class="evolution-header">
                 <h2>Evolution Chain</h2>
-                <button id="showGen1Btn" type="button" class="secondary-btn">Show Gen 1</button>
             </div>
 
             <!-- Dynamic evolution data inserted here -->
