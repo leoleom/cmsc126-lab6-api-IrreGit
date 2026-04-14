@@ -10,16 +10,18 @@ body {
     overflow-x: hidden;
     
     color: #f5f5f5;
-    background-color: #ef5350;
+    background: linear-gradient(180deg, #ef5350 0%, #d32f2f 100%);
     
     text-align: center;
-    font-family: 'Helvetica', sans-serif;
+    font-family: 'Poppins', 'Helvetica', sans-serif;
     font-size: 12px;
 
-    main {flex: 1;}
+    main {flex: 1; padding: 20px}
+    
 }
 
 header {
+   
     h1 {
         font-size: 80px;
         font-family: 'Pokemon Solid', sans-serif;
@@ -33,7 +35,10 @@ header {
     p {
         font-size: 18px;
         margin-top: 0px;
+        opacity: 0.95;
+        letter-spacing: 0.5px;
     }
+   
 }
 
 .hidden {
@@ -43,28 +48,68 @@ display: none;
 .footer {
     background-color: #2f2f2f;
     padding: 20px;
+    margin-top: auto;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
 
     p {
         margin: 0px;
     }
+
+    a {
+        color: #feca1b;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
 }
 
 main > section {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 
     button {
         border-radius: 20px;
         vertical-align: middle;
+        border: none;
+        padding: 10px 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
     }
+
+    button:hover {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+        opacity: 0.95;
+    }
+
+    button:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
 form {
     background-color: #f5f5f5;
     display: inline-flex;
-    width: 350px;
-    padding: 5px;
-    border-radius: 20px;
+    width: 380px;
+    max-width: 90%;
+    padding: 8px 10px;
+    border-radius: 25px;
     align-items: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
 
     input:focus, select:focus{ 
         outline: none;
@@ -75,17 +120,51 @@ form {
         min-width: 0;
         width: 250px;
         padding-left: 10px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        color: #2f2f2f;
     }
 
-    #searchInput, #typeSelect, .clearBtn{
+    #searchInput, #typeSelect, #clearBtn{
         border: none;
         background-color: transparent;
     }
     
-    .clearBtn{
+    #clearBtn{
         margin-left: auto;
         display: none;
         text-align: right;
+        color: #666;
+        font-size: 13px;
+        padding: 6px 10px;
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
+        padding-left: 12px;
+        cursor: pointer;
+    }
+
+    &:focus-within {
+    box-shadow: 0 0 0 3px rgba(55, 97, 168, 0.25);
+}
+}
+
+.button-group {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    button {
+        font-size: 13px;
+        padding: 8px 16px;
+    }
+    #searchBtn {
+        background-color: #3761a8;
+        color: white;
+    }
+    #randomBtn {
+        background-color: #feca1b;
+        color: #2f2f2f;
     }
 }
 
@@ -96,6 +175,7 @@ form {
     min-width: 50px;
     width: 50px;
     height: 25px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
 
     #typeSelect{
         position: absolute;
@@ -131,29 +211,41 @@ form {
 #results, #evolutionSection {
     background-color: white;
     
-    border-radius: 12px;
+    border-radius: 18px;
     display: none;
     width: fit-content;
     max-width: 75%;
     min-width: 50%;
     color:#2f2f2f;
+    margin: 0 auto 30px auto;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    padding-bottom: 20px;
+    
 
     h2 {
-        background-color: #595959;
+        background: linear-gradient(90deg, #3761a8, #274b87);
         margin: 0px;
-        padding: 10px 20px;
+        padding: 12px 20px;
         border-radius: 10px 10px 0px 0px;
         
         color: white;
-        font-weight: 500;
+        font-weight: 600;
         text-align: left;
+        letter-spacing: 0.5px;
     }
 
     .type-badge{
+        display: inline-block;
         border-radius: 12px;
-        padding: 5px;
-        margin: 1px;
+        padding: 6px 10px;
+        margin: 4px;
         color: white;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: capitalize;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+
         img {
             vertical-align: middle;
         }
@@ -161,16 +253,63 @@ form {
 
     .card-sprite{
         background-color: #f2f2f2;
-        padding: 5px;
-        border-radius: 10px;
+        padding: 10px;
+        border-radius: 12px;
         min-height: 100px;
+        margin-bottom: 10px;
     }
 }
 
+.evolution-header {
+    display: block;
+}
+
+#pokemonContainer,
+#evolutionContainer {
+    padding: 20px;
+}
+
 .pokemon-card{
-    width: 250px;
+    width: 230px;
     display: inline-block;
-    margin: 20px 0px;
+    margin: 15px;
+    padding: 16px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.25s ease;
+    vertical-align: top;
+    line-height: 1.5;
+
+    &:hover {
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.placeholder-message {
+    color: #777;
+    font-size: 14px;
+    padding: 30px;
+    font-style: italic;
+}
+
+#loading {
+    p {
+        font-weight: 600;
+        color: #3761a8;
+        font-size: 15px;
+    }
+}
+
+#error {
+    p {
+        color: #b71c1c;
+        background-color: #ffebee;
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
 }
 
 #paginationSection{
@@ -179,39 +318,67 @@ form {
     align-items: center;
     gap: 10px;
     margin: 20px 0;
+
+    button {
+        background-color: #3761a8;
+        color: white;
+    }
 }
 
 #pageNumber{
-    width: 40px;
+    width: 50px;
     text-align: center;
-    padding: 5px;
+    padding: 6px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-family: 'Poppins', sans-serif;
+
+    &:focus {
+    outline: none;
+    border: 2px solid #3761a8;
+    box-shadow: 0 0 0 2px rgba(55, 97, 168, 0.2);
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 }
 
-.evo-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-}
+.evolution-container {
+    padding: 20px;
 
-.evo-node, .evo-branch {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+    .evo-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
 
-.evo-branches {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
+    .evo-node, .evo-branch {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-.evo-stage {
-    text-align: center;
-}
+    .evo-branches {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
 
-.evo-arrow {
-    font-size: 20px;
-    color: #666;
+    .evo-stage {
+        text-align: center;
+        background-color: #fafafa;
+        padding: 10px;
+        border-radius: 14px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .evo-arrow {
+        font-size: 20px;
+        color: #666;
+    }
 }
