@@ -101,7 +101,6 @@ function renderPokemon(pokemon) {
     `;
 
     // Inject the HTML into the container
-    pokemonContainer.innerHTML += cardHTML;
     pokemonContainer.insertAdjacentHTML('beforeend', cardHTML);
 }
 
